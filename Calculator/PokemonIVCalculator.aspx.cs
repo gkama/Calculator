@@ -11,7 +11,10 @@ namespace Calculator
     public partial class Home : System.Web.UI.Page
     {
         //IV max possible
+        private static List<string> pNames = new List<string>();
+        private static List<string> pNamesSorted = new List<string>();
 
+        private static Dictionary<string, int> pNamesIndex = new Dictionary<string, int>();
 
         //Dust requirements by level
         private Dictionary<int, int> dustByLevel = new Dictionary<int, int>() 
@@ -64,7 +67,7 @@ namespace Calculator
         };
 
         //Atack
-        private List<int> pokemonAttack = new List<int>() 
+        private List<int> pAttack = new List<int>() 
         { 
             126,156,198,128,160,212,112,144,186,62,56,144,68,62,144,94,126,
             170,92,146,102,168,112,166,124,200,90,150,100,132,184,110,142,
@@ -79,7 +82,7 @@ namespace Calculator
         };
 
         //Defense
-        private List<int> pokemonDefense = new List<int>() 
+        private List<int> pDefense = new List<int>() 
         {
             126,158,200,108,140,182,142,176,222,66,86,144,64,82,130,90,122,
             166,86,150,78,146,112,166,108,154,114,172,104,136,190,94,128,170,
@@ -94,7 +97,7 @@ namespace Calculator
         };
 
         //Stamina
-        private List<int> pokemonStamina = new List<int>() 
+        private List<int> pStamina = new List<int>() 
         { 
             90,120,160,78,116,156,88,118,158,90,100,120,80,90,130,80,126,166,
             60,110,80,130,70,120,70,120,100,150,110,140,180,92,122,162,140,190,
@@ -109,8 +112,26 @@ namespace Calculator
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Do nothing
+            if (!Page.IsPostBack)
+            {
+                //Populate pNmaes & Sort
+                int k = 0;
+                foreach (ListItem i in pokemonDDL.Items)
+                {
+                    pNames.Add(i.ToString());
+                    pNamesIndex.Add(i.ToString(), k);
+                    k++;
+                }
+                pNamesSorted = pNames;
+                pNamesSorted.Sort();
+
+                //pStats DDL filled
+                pStatsDDL.DataSource = pNamesSorted;
+                pStatsDDL.DataBind();
+            }
         }
+
+       
 
         protected void pokemonDDLSelection_Change(object sender, EventArgs e)
         {
@@ -134,25 +155,59 @@ namespace Calculator
         }
 
         //Calculate the IV
-        string calculateIV(string pokemonName, int CP, int HP, int trainerLevel, int pokemonIndex)
+        string calculateIV(string pokemonName, int CP, int HP, int trainerLevel, int pIndex)
         {
             StringBuilder toReturn = new StringBuilder();
             double bestHP;
             double bestCP;
             double perfect = 0;
 
+            double atkIV = 0;
+            double defIV = 0;
+            double stamIV = 0;
+
             if (!string.IsNullOrEmpty(hpTextBox.Text.Trim()) && !string.IsNullOrEmpty(cpTextBox.Text.Trim()))
             {
                 //Calcualte the IV Value
 
-                bestHP = Math.Round((pokemonStamina[pokemonIndex] + 15) * cpMultiplierByLevel[trainerLevel]);
-                bestCP = Math.Round((pokemonAttack[pokemonIndex] + 15) * (double)Math.Pow(pokemonDefense[pokemonIndex] + 15,0.5)
-                    * (double)Math.Pow(pokemonStamina[pokemonIndex] + 15, 0.5) * (double)Math.Pow(cpMultiplierByLevel[trainerLevel], 2) / 10);
+                //Best HP & CP
+                atkIV = 15;
+                defIV = 15;
+                stamIV = 15;
+                bestHP = Math.Round((pStamina[pIndex] + stamIV) * cpMultiplierByLevel[trainerLevel]);
+                bestCP = Math.Round((pAttack[pIndex] + atkIV) * (double)Math.Pow(pDefense[pIndex] + defIV, 0.5)
+                    * (double)Math.Pow(pStamina[pIndex] + stamIV, 0.5) * (double)Math.Pow(cpMultiplierByLevel[trainerLevel], 2) / 10);
+
+                //Calculate Average
+
+
 
                 perfect = (((HP / bestHP) + (CP / bestCP)) / 2) * 100;
+
+                if (perfect > 100)
+                    perfect = 100;
             }
 
-            return perfect.ToString("#.0");
+            return (perfect.ToString("#.0") + "%");
+        }
+
+
+        //Max Stats
+        protected void pStatsDDLSelection_Change(object sender, EventArgs e)
+        {
+            StringBuilder maxStats = new StringBuilder();
+            
+            //Check selected
+            foreach (string s in pNames)
+                if (s == pStatsDDL.SelectedItem.ToString())
+                {
+                    maxStats.Append("<b>" + "Pokemon" + ":</b> ").Append(s).Append("</br>");
+                    maxStats.Append("&nbsp;&nbsp;&nbsp;&nbsp;<b>" + "Attack" + ":</b> ").Append(pAttack[pNamesIndex[pStatsDDL.SelectedItem.ToString()]]).Append("</br>");
+                    maxStats.Append("&nbsp;&nbsp;&nbsp;&nbsp;<b>" + "Defense" + ":</b> ").Append(pDefense[pNamesIndex[pStatsDDL.SelectedItem.ToString()]]).Append("</br>");
+                    maxStats.Append("&nbsp;&nbsp;&nbsp;&nbsp;<b>" + "Stamina" + ":</b> ").Append(pStamina[pNamesIndex[pStatsDDL.SelectedItem.ToString()]]).Append("</br>");
+                }
+
+            maxStatsLabel.Text = maxStats.ToString();
         }
     }
 }

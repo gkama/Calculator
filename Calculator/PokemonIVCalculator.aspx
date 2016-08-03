@@ -187,8 +187,8 @@
         <ul class="list-unstyled main-menu">
             <!--Include your navigation here-->
             <li class="text-right"><a href="#" id="nav-close">X</a></li>
-            <li><a href="../PokemonIVCalculator">IV Calculator <span class="icon"></span></a></li>
-            <li><a href="#">Menu Two <span class="icon"></span></a></li>
+            <li><a href="#IVCalcAnchor">IV Calculator <span class="icon"></span></a></li>
+            <li><a href="#MaxStatsAnchor">Maximum Stats <span class="icon"></span></a></li>
             <li><a href="#">Menu Three <span class="icon"></span></a></li>
             <li><a href="#">Sub Menu Header</a>
                 <ul class="list-unstyled">
@@ -215,16 +215,14 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid" style="font-family: 'Century Gothic'; padding-left: 100px; padding-right: 100px;">
-
-
+    <hr />
+    <a name="IVCalcAnchor"></a>
+    <div class="container-fluid" runat="server" style="font-family: 'Century Gothic'; padding-left: 100px; padding-right: 100px; margin-top: 70px;">
 
         <!-- Input -->
         <div class="row">
-
             <div class="col-sm-2">
-                <p><b>Pokemon:</b></p>
-                <hr />
+                <p style="margin-left: auto; margin-right: auto; text-align: center;"><b>Pokemon</b></p>
                 <asp:DropDownList ID="pokemonDDL"
                     AutoPostBack="True"
                     OnSelectedIndexChanged="pokemonDDLSelection_Change"
@@ -383,30 +381,22 @@
                     <asp:ListItem>Mewtwo</asp:ListItem>
                     <asp:ListItem>Mew</asp:ListItem>
                 </asp:DropDownList>
-                <hr />
             </div>
 
             <div class="col-sm-2">
-                <p><b>CP</b></p>
-                <hr />
+                <p style="margin-left: auto; margin-right: auto; text-align: center;"><b>CP</b></p>
                 <asp:TextBox runat="server" ID="cpTextBox" CssClass="form-control">
-
                 </asp:TextBox>
-                <hr />
             </div>
 
             <div class="col-sm-2">
-                <p><b>Health (HP)</b></p>
-                <hr />
+                <p style="margin-left: auto; margin-right: auto; text-align: center;"><b>Health (HP)</b></p>
                 <asp:TextBox runat="server" ID="hpTextBox" CssClass="form-control">
-
                 </asp:TextBox>
-                <hr />
             </div>
 
             <div class="col-sm-2">
-                <p><b>Trainer Level</b></p>
-                <hr />
+                <p style="margin-left: auto; margin-right: auto; text-align: center;"><b>Trainer Level</b></p>
                 <asp:DropDownList ID="trainerLevelDDL"
                     AutoPostBack="True"
                     OnSelectedIndexChanged="trainerLevelDDLSelection_Change"
@@ -453,12 +443,10 @@
                     <asp:ListItem>39</asp:ListItem>
                     <asp:ListItem>40</asp:ListItem>
                 </asp:DropDownList>
-                <hr />
             </div>
 
             <div class="col-sm-2">
-                <p><b>Powered</b></p>
-                <hr />
+                <p style="margin-left: auto; margin-right: auto; text-align: center;"><b>Powered</b></p>
                 <asp:DropDownList ID="poweredDDL"
                     AutoPostBack="True"
                     OnSelectedIndexChanged="poweredDDLSelection_Change"
@@ -469,19 +457,49 @@
                     <asp:ListItem>Yes</asp:ListItem>
 
                 </asp:DropDownList>
-                <hr />
             </div>
-
         </div>
         <!-- Result Label -->
-        <div style="margin-left: auto; margin-right: auto; text-align: center;">
-            <asp:Label ID="resultLabel" runat="server" Text="ABC" Font-Bold="true" Font-Size="X-Large"
+        <div class="well well-lg" style="margin-top: 20px">
+            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                <asp:Label ID="resultLabel" runat="server" Text="PERFECT: " Font-Bold="true" Font-Size="X-Large"
+                    CssClass="StrongText">
+                
+                </asp:Label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Max Values -->
+    <hr />
+    <a name="MaxStatsAnchor"></a>
+    <div class="container-fluid" runat="server" style="font-family: 'Century Gothic'; padding-left: 100px; padding-right: 100px;">
+        <div style="margin-left: auto; margin-right: auto; text-align: center; margin-top: 20px; margin-bottom: 10px;">
+            <asp:Label ID="Label1" runat="server" Text="Pokemon: Statistics" Font-Bold="true" Font-Size="X-Large"
                 CssClass="StrongText">
                 
             </asp:Label>
         </div>
-
-        
+        <div class="well well-lg">
+            <div class="row" runat="server" id="statsRow">
+                <div class="col-lg-6">
+                    <asp:DropDownList ID="pStatsDDL"
+                        AutoPostBack="True"
+                        OnSelectedIndexChanged="pStatsDDLSelection_Change"
+                        runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+                </div>
+                <div class="col-lg-6">
+                    <div style="margin-left: auto; margin-right: auto; text-align: left;">
+                        <asp:Label ID="maxStatsLabel" runat="server" Text="" Font-Size="X-Large"
+                            CssClass="StrongText">
+                
+                        </asp:Label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
